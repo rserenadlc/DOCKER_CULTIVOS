@@ -6,6 +6,19 @@ import numpy as np
 from scipy.spatial import KDTree
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
+import os
+
+# Ajuste inteligente de ruta: detecta si está corriendo dentro de Docker o localmente
+if os.path.exists("model/crop_model_geo.pkl"):
+    MODEL_PATH = "model/crop_model_geo.pkl"
+    DB_PATH = "model/spatial_database.csv"
+else:
+    MODEL_PATH = "../model/crop_model_geo.pkl"
+    DB_PATH = "../model/spatial_database.csv"
+
+# Cargar archivos con la ruta detectada
+model = joblib.load(MODEL_PATH)
+spatial_db = pd.read_csv(DB_PATH)
 
 app = FastAPI(title="Recomendador Inteligente de Cultivos (Geo-Grounded)")
 
