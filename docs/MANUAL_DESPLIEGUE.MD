@@ -9,6 +9,11 @@
 Se selecciona **Render / AWS App Runner** por soporte nativo de `docker-compose` y contenedores Docker independientes:
 1. **Contenedor Backend (FastAPI):** Exposición del puerto `8000`. Carga del modelo en memoria durante el boot.
 2. **Contenedor Frontend (Streamlit):** Exposición del puerto `8501`. Comunicación interna mediante variable de entorno `API_URL`.
+### Registros Públicos de Imágenes (Docker Hub)
+- **Imagen Backend:** `https://hub.docker.com/r/richarddees/cultivos-backend`
+  - Comando de descarga: `docker pull richarddees/cultivos-backend:v1`
+- **Imagen Frontend:** `https://hub.docker.com/r/richarddees/cultivos-frontend`
+  - Comando de descarga: `docker pull richarddees/cultivos-frontend:v1`
 
 ## 3. Guía Paso a Paso para Despliegue Cloud (vía Container Registry)
 1. **Construir e etiquetar imágenes localmente:**
