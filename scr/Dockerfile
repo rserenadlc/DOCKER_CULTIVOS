@@ -5,10 +5,11 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-COPY scr/requirements.txt .
+# Copiar requirements.txt directamente desde la raíz
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiamos todo el contenido del proyecto para tener acceso a scr dislexia y model
+# Copiar todo el código al contenedor
 COPY . /app
 
 EXPOSE 8000
