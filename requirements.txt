@@ -1,8 +1,8 @@
-pandas
-scikit-learn
-joblib
 fastapi
 uvicorn
 pydantic
-geopy
+pandas
+scikit-learn
+joblib
 scipy
+geopy
