@@ -9,22 +9,20 @@ from geopy.exc import GeocoderTimedOut
 
 app = FastAPI(title="Recomendador Inteligente de Cultivos (Geo-Grounded)")
 
-# 1. Cargar el Modelo y la Base de Datos Espacial en memoria al arrancar
+# 1. Inicializar geolocalizador (fuera del try para que siempre exista)
+geolocator = Nominatim(user_agent="app_cultivos_tecmilenio")
+
+# 2. Cargar el Modelo y la Base de Datos Espacial
 try:
     model = joblib.load("../model/crop_model_geo.pkl")
     spatial_db = pd.read_csv("../model/spatial_database.csv")
     
-    # Crear un árbol espacial (KDTree) para búsquedas de coordenadas ultrarrápidas
     coordenadas = spatial_db[['lat', 'lon']].values
     arbol_espacial = KDTree(coordenadas)
-    
-    # Las columnas exactas que requiere el modelo
     features_cols = spatial_db.columns.drop(['lat', 'lon'])
-    
-    # Inicializar geolocalizador
-    geolocator = Nominatim(user_agent="app_cultivos_tecmilenio")
 except Exception as e:
-    print(f"Error crítico iniciando servicios: {e}")
+    print(f"ATENCIÓN - Error cargando el modelo: {e}")
+    # Si ves este error en la terminal, necesitas ejecutar train.py
 
 # 2. Esquema de entrada de datos
 class LocationInput(BaseModel):
