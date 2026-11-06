@@ -13,7 +13,7 @@ st.set_page_config(
 # Localmente apuntará al puerto 8000. En Docker, usará el nombre del servicio.
 API_URL = os.getenv("API_URL", "http://localhost:8000")
 
-st.title("🌱 Recomendador Inteligente de Cultivos")
+st.title("Recomendador Inteligente de Cultivos")
 st.markdown("""
 Este sistema utiliza un modelo de **Machine Learning (Random Forest)** para recomendar los mejores cultivos 
 basándose en las condiciones climáticas y de suelo de tu región.
@@ -30,7 +30,7 @@ with col1:
 with col2:
     pais = st.text_input("País", value="México")
 
-if st.button("Buscar Recomendación 🚀", type="primary"):
+if st.button("Buscar Recomendación", type="primary"):
     if not ciudad.strip():
         st.warning("Por favor, ingresa una ciudad para continuar.")
     else:
@@ -45,11 +45,11 @@ if st.button("Buscar Recomendación 🚀", type="primary"):
                     st.success("¡Análisis completado con éxito!")
                     
                     # Mostrar Ubicación Detectada
-                    st.subheader("📍 Ubicación Localizada")
+                    st.subheader("📍Ubicación Localizada")
                     st.info(data["ubicacion_detectada"]["direccion"])
                     
                     # Mostrar Condiciones Ambientales usando métricas visuales
-                    st.subheader("🌦️ Condiciones Estimadas")
+                    st.subheader("Condiciones Estimadas")
                     condiciones = data["condiciones_estimadas"]
                     c1, c2, c3 = st.columns(3)
                     c1.metric("Temperatura Anual", condiciones["temperatura_anual"])
@@ -57,7 +57,7 @@ if st.button("Buscar Recomendación 🚀", type="primary"):
                     c3.metric("pH del Suelo", str(condiciones["ph_suelo"]))
                     
                     # Mostrar Recomendaciones Top 3
-                    st.subheader("🏆 Top 3 Cultivos Recomendados")
+                    st.subheader("Top 3 Cultivos Recomendados")
                     recomendaciones = data["recomendaciones_top3"]
                     
                     for i, rec in enumerate(recomendaciones):
@@ -72,4 +72,4 @@ if st.button("Buscar Recomendación 🚀", type="primary"):
                     st.error(f"Error {response.status_code}: {error_msg}")
                     
             except requests.exceptions.ConnectionError:
-                st.error("🚨 No se pudo conectar con la API. Asegúrate de que el backend (FastAPI) está en ejecución.")
+                st.error("No se pudo conectar con la API. Asegúrate de que el backend (FastAPI) está en ejecución.")
