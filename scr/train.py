@@ -8,8 +8,8 @@ print("Cargando datasets...")
 df_geo = pd.read_csv('../data/crop_recommendation_geo.csv')
 df_loc = pd.read_csv('../data/crop_locations.csv')
 
-# Unir ambos dataframes por 'id'
-df_full = pd.merge(df_geo, df_loc, on='id')
+# Unir ambos dataframes por 'id', ignorando el 'label' duplicado del segundo archivo
+df_full = pd.merge(df_geo, df_loc.drop(columns=['label']), on='id')
 
 # Seleccionar las 16 características ambientales (Omitimos lat, lon, etc.)
 features = [
