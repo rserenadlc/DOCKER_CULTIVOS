@@ -1,41 +1,34 @@
+import os
+import joblib
+import pandas as pd
+from scipy.spatial import KDTree
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import pandas as pd
-import joblib
-import numpy as np
-from scipy.spatial import KDTree
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
-import os
-
-# Ajuste inteligente de ruta: detecta si está corriendo dentro de Docker o localmente
-if os.path.exists("model/crop_model_geo.pkl"):
-    MODEL_PATH = "model/crop_model_geo.pkl"
-    DB_PATH = "model/spatial_database.csv"
-else:
-    MODEL_PATH = "../model/crop_model_geo.pkl"
-    DB_PATH = "../model/spatial_database.csv"
-
-# Cargar archivos con la ruta detectada
-model = joblib.load(MODEL_PATH)
-spatial_db = pd.read_csv(DB_PATH)
 
 app = FastAPI(title="Recomendador Inteligente de Cultivos (Geo-Grounded)")
 
-# 1. Inicializar geolocalizador (fuera del try para que siempre exista)
+# 1. Resolver la ruta absoluta del directorio 'model'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)) # Ruta de la carpeta scr/
+MODEL_DIR = os.path.join(BASE_DIR, "..", "model")      # Sube un nivel y entra a model/
+
+MODEL_PATH = os.path.join(MODEL_DIR, "crop_model_geo.pkl")
+DB_PATH = os.path.join(MODEL_DIR, "spatial_database.csv")
+
+# 2. Inicializar geolocalizador
 geolocator = Nominatim(user_agent="app_cultivos_tecmilenio")
 
-# 2. Cargar el Modelo y la Base de Datos Espacial
+# 3. Cargar el Modelo y la Base de Datos Espacial
 try:
-    model = joblib.load("../model/crop_model_geo.pkl")
-    spatial_db = pd.read_csv("../model/spatial_database.csv")
+    model = joblib.load(MODEL_PATH)
+    spatial_db = pd.read_csv(DB_PATH)
     
     coordenadas = spatial_db[['lat', 'lon']].values
     arbol_espacial = KDTree(coordenadas)
     features_cols = spatial_db.columns.drop(['lat', 'lon'])
 except Exception as e:
-    print(f"ATENCIÓN - Error cargando el modelo: {e}")
-    # Si ves este error en la terminal, necesitas ejecutar train.py
+    print(f"CRÍTICO: No se pudieron cargar los archivos del modelo desde {MODEL_DIR}: {e}")
 
 # 2. Esquema de entrada de datos
 class LocationInput(BaseModel):
