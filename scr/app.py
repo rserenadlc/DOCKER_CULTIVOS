@@ -1,6 +1,7 @@
 import os
 import joblib
 import pandas as pd
+import numpy as np
 from scipy.spatial import KDTree
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
